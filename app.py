@@ -1,6 +1,9 @@
 import sys
 import socket
 import json
+
+from flask import render_template
+
 from stix2patterns.validator import validate
 from stix2patterns.inspector import INDEX_STAR
 from stix2patterns.pattern import Pattern
@@ -23,7 +26,30 @@ def run_server(): # used only by test module to start dev server
     
     app.run(debug=True, port=5000, host=IP)
 
+@app.route('/')
+def welcome(results=None):
+    return render_template('webform.html', results=results)
 
+@app.route('/action-page', methods=['POST'])
+def action():
+    pattern = request.form['pattern']
+    route = request.form['function']
+    if route == "car-elastic":
+        outputLanguage = SearchPlatforms.ELASTIC
+        outputDataModel = DataModels.CAR
+        returnObject = {}
+        returnObject['stix-pattern'] = pattern
+        returnObject['car-elastic'] = translate(
+            pattern, outputLanguage, outputDataModel)
+        return json.dumps(returnObject)
+    elif route == "validate":
+        try:
+            pass_test = validate(pattern, ret_errs=False, print_errs=False)
+            return '{"validated":"true"}'
+        except (EOFError, KeyboardInterrupt):
+            return '{"validated":"false"}'
+        except:
+            return '{"validated":"false"}'
 
 @app.route('/car-elastic', methods=['POST'])
 def car_elastic():

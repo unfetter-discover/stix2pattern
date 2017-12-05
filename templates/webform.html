@@ -1,0 +1,23 @@
+<!doctype html>
+
+<title> Unfetter STIX Pattern Test Page</title>
+
+<p>This page will let you test the STIX Validation, Get objects and Translations</p>
+
+
+<form action="/action-page">
+    STIX Pattern: <br>
+    <input type="text" name="pattern"><br>
+
+    <input type="radio" name="function" value"validate" checked>validate<br>
+    <input type="radio" name="function" value"getObjects">Get The Observed Objects<br>
+    <input type="radio" name="function" value"cim-splunk">Translate to CIM/Splunk<br>
+    <input type="radio" name="function" value"car-splunk">Translate to CAR/Splunk<br>
+    <input type="radio" name="function" value"car-elastic">Translate to CAR/Elastic<br>
+    <input type="submit" value="submit">
+</form>
+
+{% if results %}
+  <H1> Results</H1>
+  <p>{{ results }}</p>
+{% endif %}

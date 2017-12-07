@@ -30,7 +30,7 @@ def run_server(): # used only by test module to start dev server
 def welcome(results=None):
     return render_template('webform.html', results=results)
 
-@app.route('/action-page', methods=['POST'])
+@app.route('action-page', methods=['POST'])
 def action():
     pattern = request.form['pattern']
     route = request.form['function']

@@ -100,12 +100,13 @@ def test_car_splunk(client, pattern, translation):
     assert response.status_code == 200
     assert json.dumps(json.loads(response.data.decode('utf8')), sort_keys=True) == json.dumps(expectedValue, sort_keys=True)
 
-# This will test against all translations.  The parameter is (stix-pattern, expected validated value (True/False), [car-elastic result, car-splunk result, cim-splunk result]
+# This will test against all translations.  The parameter is (stix-pattern, expected validated value (True/False), [car-elastic result, car-splunk result, cim-splunk result, get objects]
 TRANSLATE_SUCESS = [
     ("[file:hashes.MD5 = '79054025255fb1a26e4bc422aef54eb4']",True,
      ['data_model.object:file AND data_model.fields.md5_hash:"79054025255fb1a26e4bc422aef54eb4"',
      '|where (match(tag, "dm-file-.*") AND md5_hash = "79054025255fb1a26e4bc422aef54eb4")',
      '|where (tag="endpoint" AND file_hash = "79054025255fb1a26e4bc422aef54eb4")']),
+     
     ("[process:pid NOT IN (1, 2, 3) AND process:name = 'wsmprovhost.exe']",True,
     ['(data_model.object:process AND data_model.fields.exe:\"wsmprovhost.exe\") AND (data_model.object:process AND NOT(data_model.fields.pid:(1 OR 2 OR 3)))',
     '|where ((match(tag, "dm-process-.*") AND exe = "wsmprovhost.exe") AND (match(tag, "dm-process-.*") AND NOT (pid IN (1, 2, 3))))',
@@ -185,7 +186,8 @@ def test_nodata(client,endpoints):
 
 
 GET_OBJECTS = [
-    ("[file:hashes.MD5 = '79054025255fb1a26e4bc422aef54eb4']","[file:hashes.MD5]")
+    ("[file:hashes.MD5 = '79054025255fb1a26e4bc422aef54eb4']",'[{"name": "file", "property": "hashes"}]'),
+    ("[process:pid NOT IN (1, 2, 3) AND process:name = 'wsmprovhost.exe']",'[{"name": "process", "property": "pid"}, {"name": "process", "property": "name"}]')
 ]
 
 @pytest.mark.parametrize(u"pattern, objects", GET_OBJECTS)
@@ -197,6 +199,6 @@ def test_get_object(client, pattern, objects):
     expectedValue = {}
     expectedValue['pattern'] = pattern
     expectedValue['validated'] = True
-    expectedValue['object'] = objects
+    expectedValue['object'] = json.loads(objects)
     assert response.status_code == 200
     assert json.dumps(json.loads(response.data.decode('utf8')), sort_keys=True) == json.dumps(expectedValue, sort_keys=True)

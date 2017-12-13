@@ -127,8 +127,8 @@ def getObjects():
         returnObject = {}
         returnObject['pattern'] = patternObject['pattern']
         try:
-            returnObject['validated'] = validate(pattern, ret_errs=False, print_errs=False)
-            compiled_pattern = Pattern(pattern)
+            returnObject['validated'] = validate(patternObject['pattern'], ret_errs=False, print_errs=True)
+            compiled_pattern = Pattern(patternObject['pattern'])
 
             theinspector = inspector.InspectionListener()
             compiled_pattern.walk(theinspector)
@@ -166,7 +166,7 @@ def callValidate():
         returnObject = {}
         returnObject['pattern'] = patternObject['pattern']
         try:
-            returnObject['validated'] = validate(returnObject['pattern'], ret_errs=False, print_errs=False)
+            returnObject['validated'] = validate(returnObject['pattern'], ret_errs=False, print_errs=True)
             return json.dumps(returnObject)
 
         except (EOFError, KeyboardInterrupt):

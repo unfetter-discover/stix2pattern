@@ -17,9 +17,15 @@ import os
 
 @pytest.fixture
 def client(request):
+    """
+    Fixture to help manage creation and teardown of the Flask App
+    """
     test_client = app.test_client()
 
     def teardown():
+        """
+        Holder function for teardown of the Flask App
+        """        
         pass # databases and resourses have to be freed at the end. But so far we don't have anything
 
     request.addfinalizer(teardown)
@@ -64,6 +70,9 @@ VALIDATE_PASS_RESPONSE = [
 
 @pytest.mark.parametrize(u"pattern,validated",VALIDATE_PASS_RESPONSE)
 def test_validate(client, pattern, validated):
+    """
+    Test the Validate endpoint
+    """    
     response = post_json(client, '/validate', pattern)
     assert response.status_code == 200
     expectedValue = {}
@@ -79,6 +88,9 @@ CAR_ELASTIC_PASS = [
 ]
 @pytest.mark.parametrize(u"pattern,translation", CAR_ELASTIC_PASS)
 def test_car_splunk(client, pattern, translation):
+    """
+    Test the car-splunk endpoint
+    """    
     response = post_json(client, '/car-elastic', pattern)
     assert response.status_code == 200
     expectedValue = {}
@@ -108,7 +120,10 @@ TRANSLATE_SUCESS = [
 
 @pytest.mark.parametrize(u"pattern, validated, translatedResults", TRANSLATE_SUCESS)
 def test_every_translate(client, pattern, validated, translatedResults):
-
+    """
+    Test each of the car-elastic, car-splunk and cim-splunk endpoints
+    This test makes it easier to document multiple translations for a given pattern
+    """    
     for i, endpoint in enumerate(["car-elastic","car-splunk","cim-splunk"]):
         response = post_json(client, '/'+endpoint, pattern)
         expectedValue = {}
@@ -121,6 +136,9 @@ def test_every_translate(client, pattern, validated, translatedResults):
 
 @pytest.mark.parametrize(u"pattern, validated, translatedResults", TRANSLATE_SUCESS)
 def test_translate_all(client, pattern, validated, translatedResults):
+    """
+    Test the translate-all endpoint
+    """    
     response = post_json(client, '/translate-all', pattern)
     assert response.status_code == 200
     expectedValue = {}
@@ -149,12 +167,16 @@ def test_car_splunk(client, pattern, translation):
 
 @pytest.mark.parametrize(u"endpoints", [
     ("validate"),
-    ("/get-objects"),
+    ("get-objects"),
     ("cim-splunk"),
     ("car-elastic"),
-    ("car-splunk")
+    ("car-splunk"),
+    ("translate-all")
 ])
 def test_nodata(client,endpoints):
+        """
+        Test when no data is submitted
+        """    
         url = endpoints
         response = client.post(url, data="", content_type='application/json')
         assert response.status_code == 400
@@ -162,3 +184,19 @@ def test_nodata(client,endpoints):
 
 
 
+GET_OBJECTS = [
+    ("[file:hashes.MD5 = '79054025255fb1a26e4bc422aef54eb4']","[file:hashes.MD5]")
+]
+
+@pytest.mark.parametrize(u"pattern, objects", GET_OBJECTS)
+def test_get_object(client, pattern, objects):
+    """
+    Tests the "get_objects" endpoint
+    """    
+    response = post_json(client, '/get-objects', pattern)
+    expectedValue = {}
+    expectedValue['pattern'] = pattern
+    expectedValue['validated'] = True
+    expectedValue['object'] = objects
+    assert response.status_code == 200
+    assert json.dumps(json.loads(response.data.decode('utf8')), sort_keys=True) == json.dumps(expectedValue, sort_keys=True)

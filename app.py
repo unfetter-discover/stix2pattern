@@ -23,6 +23,9 @@ from stix2patterns_translator import translate, SearchPlatforms, DataModels
 app = Flask(__name__.split('.')[0])
 
 class InvalidUsage(Exception):
+    """
+    Exception class for when the data request is invalid
+    """    
     status_code = 400
 
     def __init__(self, message, status_code=None, payload=None):
@@ -38,11 +41,13 @@ class InvalidUsage(Exception):
         return rv
 
 def run_server(): # used only by test module to start dev server
-    
     app.run(debug=True, port=5000, host=IP)
 
 
 def buildTranslation(requestTranslation, requestData):
+    """
+    Function that will convert the REST input and call the appriate translation
+    """    
     if requestData:
         pattern = requestData.decode("utf-8")  # decode the input string
         patternObject = json.loads(pattern)
@@ -84,35 +89,12 @@ def buildTranslation(requestTranslation, requestData):
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
+    """
+    Handler for errors
+    """    
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
-
-
-@app.route('/')
-def welcome(results=None):
-    return render_template('webform.html', results=results)
-
-@app.route('/action-page', methods=['POST'])
-def action():
-    pattern = request.form['pattern']
-    route = request.form['function']
-    if route == "car-elastic":
-        outputLanguage = SearchPlatforms.ELASTIC
-        outputDataModel = DataModels.CAR
-        returnObject = {}
-        returnObject['stix-pattern'] = pattern
-        returnObject['car-elastic'] = translate(
-            pattern, outputLanguage, outputDataModel)
-        return json.dumps(returnObject)
-    elif route == "validate":
-        try:
-            pass_test = validate(pattern, ret_errs=False, print_errs=False)
-            return '{"validated":"true"}'
-        except (EOFError, KeyboardInterrupt):
-            return '{"validated":"false"}'
-        except:
-            return '{"validated":"false"}'
 
 @app.route('/car-elastic', methods=['POST'])
 def car_elastic():
@@ -136,11 +118,14 @@ def translate_ll():
 
 @app.route('/get-objects', methods=['POST'])
 def getObjects():
+    """
+    Returns just the objects that are part of the STIX object
+    """    
     if request.data:
         pattern = request.data.decode("utf-8")  # decode the input string
         patternObject = json.loads(pattern)
         returnObject = {}
-        returnObject['stix-pattern'] = patternObject['pattern']
+        returnObject['pattern'] = patternObject['pattern']
         try:
             returnObject['validated'] = validate(pattern, ret_errs=False, print_errs=False)
             compiled_pattern = Pattern(pattern)
@@ -171,6 +156,9 @@ def getObjects():
 
 @app.route('/validate', methods=['POST'])
 def callValidate():
+    """
+    Calls the validate function
+    """  
     if request.data:
 
         pattern = request.data.decode("utf-8")  # decode the input string

@@ -187,7 +187,7 @@ def test_nodata(client,endpoints):
 
 GET_OBJECTS = [
     ("[file:hashes.MD5 = '79054025255fb1a26e4bc422aef54eb4']",'[{"name": "file", "property": "hashes"}]'),
-    ("[process:pid NOT IN (1, 2, 3) AND process:name = 'wsmprovhost.exe']",'[{"name": "process", "property": "pid"}, {"name": "process", "property": "name"}]')
+    ("[process:pid NOT IN (1, 2, 3) AND process:name = 'wsmprovhost.exe']",'s, {"name": "process", "property": "name"}]')
 ]
 
 @pytest.mark.parametrize(u"pattern, objects", GET_OBJECTS)

@@ -57,7 +57,7 @@ VALIDATE_PASS_RESPONSE = [
     ("[file:size >= 1024]", True),
     ("[file:file_name = 'my_file_name']", True),
     ("[file:extended_properties.'ntfs-ext'.sid = '234']", True),
-    ("[emailaddr:value MATCHES '.+\\@ibm\\.com$' OR file:name MATCHES '^Final Report.+\\.exe$']", True),
+    ("[emailaddr:value MATCHES '.+\\\@ibm\\\.com$' OR file:name MATCHES '^Final Report.+\\\.exe$']", True),
     ("[ipv4addr:value ISSUBSET '192.168.0.1/24']", True),
     ("[ipv4addr:value NOT ISSUBSET '192.168.0.1/24']", True),
     ("[user-account:value = 'Peter'] AND [user-account:value != 'Paul'] AND [user-account:value = 'Mary'] WITHIN 5 SECONDS", True),
@@ -72,7 +72,7 @@ VALIDATE_PASS_RESPONSE = [
 def test_validate(client, pattern, validated):
     """
     Test the Validate endpoint
-    """    
+    """
     response = post_json(client, '/validate', pattern)
     assert response.status_code == 200
     expectedValue = {}
@@ -114,8 +114,8 @@ TRANSLATE_SUCESS = [
     ("[process:name NOT LIKE '%.exe' AND process:pid >= 4]", True,
     [
         '(data_model.object:process AND data_model.fields.pid:>=4) AND (data_model.object:process AND NOT(data_model.fields.exe:*.exe))',
-        '|where ((match(tag, "dm-process-.*") AND pid >= 4) AND (match(tag, "dm-process-.*") AND NOT (match(exe, "^.*\.exe$"))))',
-        '|where ((tag="process" AND pid >= 4) AND (tag="process" AND NOT (match(process, "^.*\.exe$"))))',
+        '|where ((match(tag, \"dm-process-.*\") AND pid >= 4) AND (match(tag, \"dm-process-.*\") AND NOT (match(exe, \"^%\\.exe$\"))))',
+        '|where ((tag=\"process\" AND pid >= 4) AND (tag=\"process\" AND NOT (match(process, \"^%\\.exe$\"))))',
     ])
 ]
 

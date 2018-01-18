@@ -50,7 +50,11 @@ def buildTranslation(requestTranslation, requestData):
     """    
     if requestData:
         pattern = requestData.decode("utf-8")  # decode the input string
-        patternObject = json.loads(pattern)
+        patternObject = {}
+        try:
+            patternObject = json.loads(pattern)
+        except:
+            patternObject['pattern'] = pattern
         returnObject = {}
         returnObject['pattern'] = patternObject['pattern']
         try:

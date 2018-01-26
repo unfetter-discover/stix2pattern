@@ -1,0 +1,15 @@
+sudo: false
+language: python
+cache: pip3
+python:
+
+  - "3.6"
+install:
+  - pip3 install flask
+  - pip3 install stix2-validator
+  - pip3 install stix-pattern-translator
+script:
+  - pytest test.py -sv
+  #- if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then pre-commit run --all-files; fi
+#after_success:
+ # - codecov

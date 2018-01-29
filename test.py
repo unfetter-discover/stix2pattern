@@ -6,14 +6,8 @@ import pytest
 from app import app
 import os
 
-# EXAMPLE Usage - accepts a STIX2 string as input via POST:
-#    curl -X POST
-#         -H "Content-Type:text/plain"
-#         -d "[process:pid <= 5]"
-#         http://127.0.0.1:5000/car-elastic
 
-
-
+# The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
 @pytest.fixture
 def client(request):
@@ -57,7 +51,7 @@ VALIDATE_PASS_RESPONSE = [
     ("[file:size >= 1024]", True),
     ("[file:file_name = 'my_file_name']", True),
     ("[file:extended_properties.'ntfs-ext'.sid = '234']", True),
-    ("[emailaddr:value MATCHES '.+\\@ibm\\.com$' OR file:name MATCHES '^Final Report.+\\.exe$']", True),
+    ("[emailaddr:value MATCHES '.+\\\@ibm\\\.com$' OR file:name MATCHES '^Final Report.+\\\.exe$']", True),
     ("[ipv4addr:value ISSUBSET '192.168.0.1/24']", True),
     ("[ipv4addr:value NOT ISSUBSET '192.168.0.1/24']", True),
     ("[user-account:value = 'Peter'] AND [user-account:value != 'Paul'] AND [user-account:value = 'Mary'] WITHIN 5 SECONDS", True),

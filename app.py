@@ -11,11 +11,7 @@ from stix2patterns import inspector
 from flask import Flask, request, render_template, jsonify
 from stix2patterns_translator import translate, SearchPlatforms, DataModels
 
-# EXAMPLE Usage - accepts a STIX2 string as input via POST:
-#    curl -X POST
-#         -H "Content-Type:text/plain"
-#         -d "[process:pid <= 5]"
-#         http://127.0.0.1:5000/car-elastic
+# The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
 """ TODO: return the results in JSON.
     catch errors and render them in JSON back to requestor."""
@@ -177,6 +173,10 @@ def callValidate():
             return json.dumps(returnObject)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
+
+@app.route('/heartbeat')
+def heartbeat():
+    return json.dumps({ 'success': True, 'service': 'unfetter-pattern-handler', 'status': 'RUNNING' })
 
 def main():
     

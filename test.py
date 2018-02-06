@@ -7,6 +7,7 @@ from app import app
 import os
 
 
+
 # The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
 @pytest.fixture
@@ -51,7 +52,6 @@ VALIDATE_PASS_RESPONSE = [
     ("[file:size >= 1024]", True),
     ("[file:file_name = 'my_file_name']", True),
     ("[file:extended_properties.'ntfs-ext'.sid = '234']", True),
-    ("[emailaddr:value MATCHES '.+\\\@ibm\\\.com$' OR file:name MATCHES '^Final Report.+\\\.exe$']", True),
     ("[ipv4addr:value ISSUBSET '192.168.0.1/24']", True),
     ("[ipv4addr:value NOT ISSUBSET '192.168.0.1/24']", True),
     ("[user-account:value = 'Peter'] AND [user-account:value != 'Paul'] AND [user-account:value = 'Mary'] WITHIN 5 SECONDS", True),

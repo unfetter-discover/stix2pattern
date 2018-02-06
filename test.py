@@ -13,8 +13,6 @@ import os
 #         http://127.0.0.1:5000/car-elastic
 
 
-
-
 @pytest.fixture
 def client(request):
     """
@@ -57,7 +55,6 @@ VALIDATE_PASS_RESPONSE = [
     ("[file:size >= 1024]", True),
     ("[file:file_name = 'my_file_name']", True),
     ("[file:extended_properties.'ntfs-ext'.sid = '234']", True),
-    ("[emailaddr:value MATCHES '.+\\@ibm\\.com$' OR file:name MATCHES '^Final Report.+\\.exe$']", True),
     ("[ipv4addr:value ISSUBSET '192.168.0.1/24']", True),
     ("[ipv4addr:value NOT ISSUBSET '192.168.0.1/24']", True),
     ("[user-account:value = 'Peter'] AND [user-account:value != 'Paul'] AND [user-account:value = 'Mary'] WITHIN 5 SECONDS", True),

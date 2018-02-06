@@ -6,12 +6,9 @@ import pytest
 from app import app
 import os
 
-# EXAMPLE Usage - accepts a STIX2 string as input via POST:
-#    curl -X POST
-#         -H "Content-Type:text/plain"
-#         -d "[process:pid <= 5]"
-#         http://127.0.0.1:5000/car-elastic
 
+
+# The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
 @pytest.fixture
 def client(request):

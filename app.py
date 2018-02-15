@@ -54,7 +54,7 @@ def buildTranslation(requestTranslation, requestData):
         try:
             returnObject['validated'] = pass_test = validate(
                 patternObject['pattern'], ret_errs=False, print_errs=True)
-        except (EOFError, KeyboardInterrupt):
+        except Exception as e:
             returnObject['validated'] = False
             return json.dumps(returnObject)
 # Removing bare exception because I should not get any other error,
@@ -79,7 +79,7 @@ def buildTranslation(requestTranslation, requestData):
                 returnObject[translation] = None
                 returnObject[translation] = translate(
                     patternObject['pattern'], outputLanguage, outputDataModel)
-            except:
+            except Exception as e:
                 pass
 
         return json.dumps(returnObject)
@@ -146,10 +146,7 @@ def getObjects():
                 returnObject['object'] = resArray
             return json.dumps(returnObject)
 
-        except (EOFError, KeyboardInterrupt):
-            returnObject['validated'] = False
-            return json.dumps(returnObject)
-        except:
+        except Exception as e:
             returnObject['validated'] = False
             return json.dumps(returnObject)
     else:
@@ -172,10 +169,7 @@ def callValidate():
                 returnObject['pattern'], ret_errs=False, print_errs=True)
             return json.dumps(returnObject)
 
-        except (EOFError, KeyboardInterrupt):
-            returnObject['validated'] = False
-            return json.dumps(returnObject)
-        except:
+        except Exception as e:
             returnObject['validated'] = False
             return json.dumps(returnObject)
     else:
@@ -192,7 +186,7 @@ def main():
     try:
         socket.inet_aton(sys.argv[1])
         IP = sys.argv[1]
-    except:
+    except Exception as e:
         IP = '127.0.0.1'
     finally:
         print("IP is "+IP)

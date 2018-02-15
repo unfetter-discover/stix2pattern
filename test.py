@@ -199,6 +199,7 @@ GET_OBJECTS = [
      '[{"name": "file", "property": "hashes"}]'),
     ("[process:pid NOT IN (1, 2, 3) AND process:name = 'wsmprovhost.exe']",
      '[{"name": "process", "property": "pid"}, {"name": "process", "property": "name"}]')
+
 ]
 
 

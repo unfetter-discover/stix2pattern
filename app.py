@@ -79,7 +79,7 @@ def buildTranslation(requestTranslation, requestData):
                 returnObject[translation] = None
                 returnObject[translation] = translate(
                     patternObject['pattern'], outputLanguage, outputDataModel)
-            except Excpetion as e:
+            except Exception as e:
                 pass
 
         return json.dumps(returnObject)

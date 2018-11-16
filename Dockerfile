@@ -1,5 +1,10 @@
 FROM python:3.6-alpine3.6
 
+ARG https_proxy_url
+
+ENV HTTP_PROXY "$https_proxy_url"
+ENV HTTPS_PROXY "$https_proxy_url"
+
 COPY app.py /opt/stix/app.py
 COPY gunicorn_config.py /opt/stix/gunicorn_config.py
 #ADD ./ /root/

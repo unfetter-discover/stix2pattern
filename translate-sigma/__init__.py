@@ -6,20 +6,20 @@ backend_names = ['splunk', 'qradar', 'es-qs']
 sigma_config = config.SigmaConfiguration()
 
 def process_sigma(pattern: str, translate=False):
-    retVal = {
+    ret_val = {
         'pattern': pattern
     }
 
     try:
         parsed = parser.SigmaCollectionParser(pattern, sigma_config)
     except (yaml.parser.ParserError, yaml.scanner.ScannerError, parser.SigmaParseError, parser.SigmaCollectionParseError) as e:
-        retVal['validated'] = False
-        return retVal
+        ret_val['validated'] = False
+        return ret_val
 
-    retVal['validated'] = True
+    ret_val['validated'] = True
 
     if translate:
-        retVal['translations'] = []
+        ret_val['translations'] = []
 
         selected_backends = []
 
@@ -42,9 +42,9 @@ def process_sigma(pattern: str, translate=False):
 
         for i in range(0, len(backend_names)):
             if results[i]:
-                retVal['translations'].append({
+                ret_val['translations'].append({
                     'tool': backend_names[i],
                     'query': results[i]
                 })
 
-    return retVal
+    return ret_val

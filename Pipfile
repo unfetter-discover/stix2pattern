@@ -9,8 +9,14 @@ flask = "*"
 stix-pattern-translator = "*"
 gunicorn = "*"
 pytest = "*"
+sigmatools = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+test = "pytest"
+start = "python app.py"
+deploy = "gunicorn --config gunicorn_config.py --access-logfile - app:app"

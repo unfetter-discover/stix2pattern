@@ -1,0 +1,6 @@
+.vscode
+venv*
+*.code-workspace
+.cache
+__pycache__
+.idea

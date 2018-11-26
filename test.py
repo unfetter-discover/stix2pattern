@@ -119,8 +119,8 @@ TRANSLATE_SUCESS = [
     ("[process:name NOT LIKE '%.exe' AND process:pid >= 4]", True,
      [
          '(data_model.object:process AND data_model.fields.pid:>=4) AND (data_model.object:process AND NOT(data_model.fields.exe:*.exe))',
-         '|where ((match(tag, "dm-process-.*") AND pid >= 4) AND (match(tag, "dm-process-.*") AND NOT (match(exe, "^.*\.exe$"))))',
-         '|where ((tag="process" AND pid >= 4) AND (tag="process" AND NOT (match(process, "^.*\.exe$"))))',
+         '|where ((match(tag, "dm-process-.*") AND pid >= 4) AND (match(tag, "dm-process-.*") AND NOT (match(exe, \"^%\\.exe$\"))))',
+         '|where ((tag="process" AND pid >= 4) AND (tag="process" AND NOT (match(process, \"^%\\.exe$\"))))',
      ])
 ]
 

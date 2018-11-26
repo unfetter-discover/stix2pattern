@@ -1,17 +1,18 @@
-sudo: false
-language: python
-cache: pip3
-python:
+# Use Ubuntu 'trusty' distribution
+sudo: required
 
-  - "3.6"
-install:
-  - pip3 install flask
-  - pip3 install stix2-validator
-  - pip3 install stix-pattern-translator
-  - pip3 install pycodestyle
+services:
+  - docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.18.0
+
+before_script:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker build . -t stix-pattern
+
 script:
-  - pytest test.py -sv
-  - pycodestyle *.py
-  #- if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then pre-commit run --all-files; fi
-#after_success:
- # - codecov
+  - docker run -it --rm stix-pattern pytest test.py -sv

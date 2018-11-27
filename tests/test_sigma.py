@@ -45,7 +45,7 @@ def json_of_response(response):
     return json.loads(response.data.decode('utf8'))
 
 VALIDATE_SAMPLES = [
-    (pattern, validated) for pattern, validated, translation in valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
+    (pattern, validated) for pattern, validated, _ in valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
 ]
 
 

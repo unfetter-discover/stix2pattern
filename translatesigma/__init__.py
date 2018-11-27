@@ -12,10 +12,16 @@ def process_sigma(pattern: str, translate=False):
 
     try:
         parsed = parser.SigmaCollectionParser(pattern, sigma_config)
-    except (yaml.parser.ParserError, yaml.scanner.ScannerError, parser.SigmaParseError, parser.SigmaCollectionParseError) as e:
+    except (yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
+        ret_val['message'] = 'Not valid YAML'
+        ret_val['validated'] = False
+        return ret_val
+    except (parser.SigmaParseError, parser.SigmaCollectionParseError) as e:
+        ret_val['message'] = 'Not valid Sigma'
         ret_val['validated'] = False
         return ret_val
     except Exception as e:
+        ret_val['message'] = 'An unknown error occured'
         ret_val['validated'] = False
         return ret_val
 

@@ -1,4 +1,6 @@
-valid_yaml_samples = [
+from typing import List, Tuple
+
+valid_yaml_samples: List[Tuple[str, bool, any]]= [
     (
         """fruits:
         - Apple
@@ -7,25 +9,57 @@ valid_yaml_samples = [
         - Mango""",
         False,
         None
+    ),
+    (
+        """invoice: 34843
+date   : 2001-01-23
+bill-to: &id001
+    given  : Chris
+    family : Dumars
+    address:
+        lines: |
+            458 Walkman Dr.
+            Suite #292
+        city    : Royal Oak
+        state   : MI
+        postal  : 48046""",
+        False,
+        None
     )
 ]
 
-invalid_yaml_samples = [
+invalid_yaml_samples: List[Tuple[str, bool, any]] = [
     (
         '{not_yaml: true}',
         False,
         None
     ),
     (
-        'something random',
+        'very clearly not yaml',
+        False,
+        None
+    ),
+    (
+        """invoice: 34843
+date   : 2001-01-23
+bill-to: &id001
+given  : Chris
+family : Dumars
+address:
+lines: |
+458 Walkman Dr.
+Suite #292
+city    : Royal Oak
+state   : MI
+postal  : 48046""",
         False,
         None
     )
 ]
 
-valid_sigma_samples = [
+valid_sigma_samples: List[Tuple[str, bool, any]] = [
     (
-"""title: WSF/JSE/JS/VBA/VBE File Execution
+        """title: WSF/JSE/JS/VBA/VBE File Execution
 status: experimental
 description: Detects suspicious file execution by wscript and cscript
 author: Michael Haag
@@ -54,20 +88,20 @@ level: medium""",
         [
             {
                 'tool': 'splunk',
-          'query': '(EventID="1" (Image="*\\\\wscript.exe" OR Image="*\\\\cscript.exe") (CommandLine="*.jse" OR CommandLine="*.vbe" OR CommandLine="*.js" OR CommandLine="*.vba"))'
-             },
-             {
-                 'tool': 'qradar',
-              'query': "SELECT UTF8(payload) as search_payload from events where ((search_payload ilike '1' and (search_payload ilike '%\\wscript.exe' or search_payload ilike '%\\cscript.exe') and (search_payload ilike '%.jse' or search_payload ilike '%.vbe' or search_payload ilike '%.js' or search_payload ilike '%.vba')))"
-             },
-             {
-                 'tool': 'es-qs',
-              'query': '(EventID:"1" AND Image:("*\\\\wscript.exe" "*\\\\cscript.exe") AND CommandLine:("*.jse" "*.vbe" "*.js" "*.vba"))'
-             }
+                'query': '(EventID="1" (Image="*\\\\wscript.exe" OR Image="*\\\\cscript.exe") (CommandLine="*.jse" OR CommandLine="*.vbe" OR CommandLine="*.js" OR CommandLine="*.vba"))'
+            },
+            {
+                'tool': 'qradar',
+                'query': "SELECT UTF8(payload) as search_payload from events where ((search_payload ilike '1' and (search_payload ilike '%\\wscript.exe' or search_payload ilike '%\\cscript.exe') and (search_payload ilike '%.jse' or search_payload ilike '%.vbe' or search_payload ilike '%.js' or search_payload ilike '%.vba')))"
+            },
+            {
+                'tool': 'es-qs',
+                'query': '(EventID:"1" AND Image:("*\\\\wscript.exe" "*\\\\cscript.exe") AND CommandLine:("*.jse" "*.vbe" "*.js" "*.vba"))'
+            }
         ]
     ),
     (
-"""title: Network Scans
+        """title: Network Scans
 description: Detects many failed connection attempts to different ports or hosts
 author: Thomas Patzke
 logsource:
@@ -101,7 +135,7 @@ level: medium""",
         ]
     ),
     (
-"""title: Multiple suspicious Response Codes caused by Single Client
+        """title: Multiple suspicious Response Codes caused by Single Client
 description: Detects possible exploitation activity or bugs in a web application
 author: Thomas Patzke
 logsource:

@@ -8,10 +8,11 @@ flask = "*"
 "stix2-validator" = "*"
 stix-pattern-translator = "*"
 gunicorn = "*"
-pytest = "*"
 sigmatools = "*"
 
 [dev-packages]
+pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"

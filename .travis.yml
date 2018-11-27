@@ -15,4 +15,4 @@ before_script:
   - docker build . -t stix-pattern
 
 script:
-  - docker run -it --rm stix-pattern pytest test_stix2pattern.py -sv
+  - docker run -it --rm stix-pattern pytest -sv

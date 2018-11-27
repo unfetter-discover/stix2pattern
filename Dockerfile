@@ -12,6 +12,7 @@ WORKDIR $WORKING_DIRECTORY
 COPY . $WORKING_DIRECTORY
 
 RUN pip3 install pipenv --default-timeout=100
-RUN pipenv install --system
+# installing dev to do unit tests from docker
+RUN pipenv install --dev --system
 
 EXPOSE 5000

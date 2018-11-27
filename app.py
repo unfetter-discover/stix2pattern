@@ -2,7 +2,7 @@ import sys
 import socket
 import json
 
-from flask import render_template
+from flask import render_template, Flask
 
 from stix2patterns.validator import validate
 from stix2patterns.inspector import INDEX_STAR
@@ -17,7 +17,7 @@ from translatesigma.blueprint import sigma_bp
 """ TODO: return the results in JSON.
     catch errors and render them in JSON back to requestor."""
 
-app = Flask(__name__.split('.')[0])
+app: Flask = Flask(__name__.split('.')[0])
 
 class InvalidUsage(Exception):
     """

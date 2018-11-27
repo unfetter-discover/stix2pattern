@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-valid_yaml_samples: List[Tuple[str, bool, any]]= [
+valid_yaml_samples: List[Tuple[str, bool, any]] = [
     (
         """fruits:
         - Apple
@@ -88,11 +88,11 @@ level: medium""",
         [
             {
                 'tool': 'splunk',
-                'query': '(EventID="1" (Image="*\\\\wscript.exe" OR Image="*\\\\cscript.exe") (CommandLine="*.jse" OR CommandLine="*.vbe" OR CommandLine="*.js" OR CommandLine="*.vba"))'
+                'query': '(EventID="1" (Image="*\\\\wscript.exe" OR Image="*\\\\cscript.exe") (CommandLine="*.jse" OR CommandLine="*.vbe" OR CommandLine="*.js" OR CommandLine="*.vba"))'  # nopep8
             },
             {
                 'tool': 'qradar',
-                'query': "SELECT UTF8(payload) as search_payload from events where ((search_payload ilike '1' and (search_payload ilike '%\\wscript.exe' or search_payload ilike '%\\cscript.exe') and (search_payload ilike '%.jse' or search_payload ilike '%.vbe' or search_payload ilike '%.js' or search_payload ilike '%.vba')))"
+                'query': "SELECT UTF8(payload) as search_payload from events where ((search_payload ilike '1' and (search_payload ilike '%\\wscript.exe' or search_payload ilike '%\\cscript.exe') and (search_payload ilike '%.jse' or search_payload ilike '%.vbe' or search_payload ilike '%.js' or search_payload ilike '%.vba')))"  # nopep8
             },
             {
                 'tool': 'es-qs',

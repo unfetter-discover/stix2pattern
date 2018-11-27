@@ -44,6 +44,7 @@ def json_of_response(response):
     """Decode json from response"""
     return json.loads(response.data.decode('utf8'))
 
+
 VALIDATE_SAMPLES = [
     (pattern, validated) for pattern, validated, _ in valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
 ]
@@ -55,6 +56,7 @@ def test_validate(client, pattern, validated):
     assert response.status_code == 200
     resp_data = json.loads(response.data.decode('utf8'))
     assert resp_data['validated'] == validated
+
 
 TRANSLATE_ALL_SAMPLES = valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
 

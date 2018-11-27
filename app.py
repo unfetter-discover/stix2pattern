@@ -180,6 +180,7 @@ def callValidate():
 def heartbeat():
     return json.dumps({'success': True, 'service': 'unfetter-pattern-handler', 'status': 'RUNNING'})
 
+
 app.register_blueprint(sigma_bp, url_prefix="/sigma")
 
 def main():

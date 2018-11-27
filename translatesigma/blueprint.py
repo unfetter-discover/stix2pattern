@@ -4,6 +4,7 @@ import json
 
 sigma_bp = Blueprint('sigma', __name__)
 
+
 class InvalidUsage(Exception):
     """
     Exception class for when the data request is invalid
@@ -22,6 +23,7 @@ class InvalidUsage(Exception):
         rv['message'] = self.message
         return rv
 
+
 @sigma_bp.route('/validate', methods=['POST'])
 def validate():
     """
@@ -36,6 +38,7 @@ def validate():
         return json.dumps(response)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
+
 
 @sigma_bp.route('/translate-all', methods=['POST'])
 def translate_all():

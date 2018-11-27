@@ -5,6 +5,7 @@ backend_names = ['splunk', 'qradar', 'es-qs']
 
 sigma_config = config.SigmaConfiguration()
 
+
 def process_sigma(pattern: str, translate=False):
     ret_val = {
         'pattern': pattern

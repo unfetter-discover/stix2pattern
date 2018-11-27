@@ -4,15 +4,10 @@ sudo: required
 services:
   - docker
 
-env:
-  - DOCKER_COMPOSE_VERSION=1.18.0
-
 before_script:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
   - docker build . -t stix-pattern
 
 script:
-  - docker run -it --rm stix-pattern pytest -sv
+  - docker run -it --rm stix-pattern pipenv run test
+  - docker run -it --rm stix-pattern pipenv run coverage
+  - docker run -it --rm stix-pattern pipenv run codestyle

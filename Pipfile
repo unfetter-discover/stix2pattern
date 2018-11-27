@@ -13,6 +13,7 @@ sigmatools = "*"
 [dev-packages]
 pytest = "*"
 coverage = "*"
+pycodestyle = "*"
 
 [requires]
 python_version = "3.7"
@@ -21,3 +22,5 @@ python_version = "3.7"
 test = "pytest"
 start = "python app.py"
 deploy = "gunicorn --config gunicorn_config.py --access-logfile - app:app"
+coverage = "sh -c \"coverage run -m pytest && coverage report\""
+codestyle = "pycodestyle"

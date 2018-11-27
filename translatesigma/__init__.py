@@ -15,6 +15,9 @@ def process_sigma(pattern: str, translate=False):
     except (yaml.parser.ParserError, yaml.scanner.ScannerError, parser.SigmaParseError, parser.SigmaCollectionParseError) as e:
         ret_val['validated'] = False
         return ret_val
+    except Exception as e:
+        ret_val['validated'] = False
+        return ret_val
 
     ret_val['validated'] = True
 

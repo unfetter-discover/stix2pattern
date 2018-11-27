@@ -10,6 +10,7 @@ from stix2patterns.pattern import Pattern
 from stix2patterns import inspector
 from flask import Flask, request, render_template, jsonify
 from stix2patterns_translator import translate, SearchPlatforms, DataModels
+from translatesigma.blueprint import sigma_bp
 
 # The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
@@ -17,7 +18,6 @@ from stix2patterns_translator import translate, SearchPlatforms, DataModels
     catch errors and render them in JSON back to requestor."""
 
 app = Flask(__name__.split('.')[0])
-
 
 class InvalidUsage(Exception):
     """
@@ -180,6 +180,7 @@ def callValidate():
 def heartbeat():
     return json.dumps({'success': True, 'service': 'unfetter-pattern-handler', 'status': 'RUNNING'})
 
+app.register_blueprint(sigma_bp, url_prefix="/sigma")
 
 def main():
 

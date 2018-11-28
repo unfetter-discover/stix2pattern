@@ -1,5 +1,4 @@
-from flask import Blueprint, request
-import json
+from flask import Blueprint, request, jsonify
 
 from . import process_sigma
 from shared.errors import InvalidUsage
@@ -7,37 +6,40 @@ from shared.errors import InvalidUsage
 sigma_bp = Blueprint('sigma', __name__)
 
 
-@sigma_bp.route('/validate', methods=['POST'])
-def validate() -> str:
+def handle_req(req: request, translate: bool) -> any:
     """
-    :return: str (JSON string)
+    Handles common tasks for both validate and translate routes
 
-    Calls the validate function
+    :param req: request
+    :param translate: bool
+    :return: json
     """
-    if request.data:
-
-        pattern = request.data.decode("utf-8")  # decode the input string
-        pattern_object = json.loads(pattern)
-        pattern = pattern_object['pattern']
-        response = process_sigma(pattern)
-        return json.dumps(response)
+    if req.data:
+        req_object = req.get_json()
+        if 'pattern' not in req_object:
+            raise InvalidUsage('Pattern is required', status_code=400)
+        pattern = req_object['pattern']
+        response = process_sigma(pattern, translate)
+        return jsonify(response)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
+
+
+@sigma_bp.route('/validate', methods=['POST'])
+def validate() -> any:
+    """
+    :return: json
+
+    Validates SIGMA
+    """
+    return handle_req(request, False)
 
 
 @sigma_bp.route('/translate-all', methods=['POST'])
-def translate_all() -> str:
+def translate_all() -> any:
     """
-    :return: str (JSON string)
+    :return: json
 
-    Calls the validate function
+    Validates and translates SIGMA
     """
-    if request.data:
-
-        pattern = request.data.decode("utf-8")  # decode the input string
-        pattern_object = json.loads(pattern)
-        pattern = pattern_object['pattern']
-        response = process_sigma(pattern, True)
-        return json.dumps(response)
-    else:
-        raise InvalidUsage('No Request Data', status_code=400)
+    return handle_req(request, True)

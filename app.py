@@ -18,10 +18,6 @@ from shared.errors import InvalidUsage
 app: Flask = Flask(__name__.split('.')[0])
 
 
-def run_server():  # used only by test module to start dev server
-    app.run(debug=True, port=5000, host=IP)
-
-
 def buildTranslation(requestTranslation, requestData):
     """
     Function that will convert the REST input and call the appriate translation
@@ -163,6 +159,7 @@ def heartbeat():
 
 app.register_blueprint(sigma_bp, url_prefix="/sigma")
 
+
 def main():
 
     try:
@@ -171,7 +168,7 @@ def main():
     except Exception as e:
         IP = '127.0.0.1'
     finally:
-        print("IP is "+IP)
+        print("IP is " + IP)
         app.run(port=5000, host=IP)
 
 

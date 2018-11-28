@@ -52,7 +52,7 @@ def process_sigma(pattern: str, translate=False) -> Dict[str, any]:
         def wrap_mock_print(backend):
             def mock_print(*args, **kwargs):
                 if args[1]:
-                    results.append({ 'tool': backend.identifier, 'query': args[1] })
+                    results.append({'tool': backend.identifier, 'query': args[1]})
 
             return mock_print
 

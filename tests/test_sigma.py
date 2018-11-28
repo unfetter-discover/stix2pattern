@@ -52,14 +52,14 @@ def test_translate_all(client, pattern, validated, translations):
         resp_translations = resp_data['translations']
         for i in range(0, len(translations)):
             assert len(resp_translations[i]) == len(translations[i])
-            assert all(v == resp_translations[i][k] for k,v in translations[i].items())
+            assert all(v == resp_translations[i][k] for k, v in translations[i].items())
 
 
 @pytest.mark.parametrize(u"endpoint", [
     ("validate"),
     ("translate-all")
 ])
-def test_nodata(client, endpoint):
+def test_no_data(client, endpoint):
     """
     Test when no data is submitted
     """

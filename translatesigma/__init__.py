@@ -14,8 +14,8 @@ def process_sigma(pattern: str, translate=False) -> Dict[str, any]:
     :return: { pattern: str, validated: bool, message?: str, translations?: [{tool: str, query: str}] }
 
     Validates stringified YAML as SIGMA.
-    If it is valid SIGMA and translate is set to true,
-    it will translate it to various backend syntax
+    If it is valid SIGMA and translate is set to True,
+    it will translate it to various backends' syntax
     """
     ret_val = {
         'pattern': pattern

@@ -1,16 +1,14 @@
 import sys
 import socket
 import json
-
-from flask import render_template, Flask
-
+from flask import Flask, request, jsonify
 from stix2patterns.validator import validate
-from stix2patterns.inspector import INDEX_STAR
 from stix2patterns.pattern import Pattern
 from stix2patterns import inspector
-from flask import Flask, request, render_template, jsonify
 from stix2patterns_translator import translate, SearchPlatforms, DataModels
+
 from translatesigma.blueprint import sigma_bp
+from shared.errors import InvalidUsage
 
 # The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
 
@@ -18,24 +16,6 @@ from translatesigma.blueprint import sigma_bp
     catch errors and render them in JSON back to requestor."""
 
 app: Flask = Flask(__name__.split('.')[0])
-
-class InvalidUsage(Exception):
-    """
-    Exception class for when the data request is invalid
-    """
-    status_code = 400
-
-    def __init__(self, message, status_code=None, payload=None):
-        Exception.__init__(self)
-        self.message = message
-        if status_code is not None:
-            self.status_code = status_code
-        self.payload = payload
-
-    def to_dict(self):
-        rv = dict(self.payload or ())
-        rv['message'] = self.message
-        return rv
 
 
 def run_server():  # used only by test module to start dev server

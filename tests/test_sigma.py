@@ -1,20 +1,12 @@
 import pytest
+import json
+
 from translatesigma.blueprint import sigma_bp, InvalidUsage
 from .sigma_samples import valid_sigma_samples, valid_yaml_samples, invalid_yaml_samples
-import json
-from flask import Flask, jsonify
+from .helpers import post_json, json_of_response, create_app_from_blueprint
 
-app = Flask(__name__.split('.')[0])
-app.register_blueprint(sigma_bp)
+app = create_app_from_blueprint(sigma_bp)
 
-@app.errorhandler(InvalidUsage)
-def handle_invalid_usage(error):
-    """
-    Handler for errors
-    """
-    response = jsonify(error.to_dict())
-    response.status_code = error.status_code
-    return response
 
 @pytest.fixture
 def client(request):
@@ -33,18 +25,6 @@ def client(request):
     return test_client
 
 
-def post_json(client, url, json_dict):
-    """Send dictionary json_dict as a json to the specified url """
-    data = {}
-    data['pattern'] = json_dict
-    return client.post(url, data=json.dumps(data), content_type='application/json')
-
-
-def json_of_response(response):
-    """Decode json from response"""
-    return json.loads(response.data.decode('utf8'))
-
-
 VALIDATE_SAMPLES = [
     (pattern, validated) for pattern, validated, _ in valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
 ]
@@ -60,6 +40,7 @@ def test_validate(client, pattern, validated):
 
 TRANSLATE_ALL_SAMPLES = valid_sigma_samples + valid_yaml_samples + invalid_yaml_samples
 
+
 @pytest.mark.parametrize(u"pattern, validated, translations", TRANSLATE_ALL_SAMPLES)
 def test_translate_all(client, pattern, validated, translations):
     response = post_json(client, 'translate-all', pattern)
@@ -72,6 +53,7 @@ def test_translate_all(client, pattern, validated, translations):
         for i in range(0, len(translations)):
             assert len(resp_translations[i]) == len(translations[i])
             assert all(v == resp_translations[i][k] for k,v in translations[i].items())
+
 
 @pytest.mark.parametrize(u"endpoint", [
     ("validate"),

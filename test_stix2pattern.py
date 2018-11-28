@@ -118,7 +118,7 @@ def test_every_translate(client, pattern, validated, translatedResults):
     This test makes it easier to document multiple translations for a given pattern
     """
     for i, endpoint in enumerate(["car-elastic", "car-splunk", "cim-splunk"]):
-        response = post_json(client, '/'+endpoint, pattern)
+        response = post_json(client, '/' + endpoint, pattern)
         expectedValue = {}
         expectedValue['pattern'] = pattern
         expectedValue['validated'] = validated

@@ -25,8 +25,10 @@ class InvalidUsage(Exception):
 
 
 @sigma_bp.route('/validate', methods=['POST'])
-def validate():
+def validate() -> str:
     """
+    :return: str (JSON string)
+
     Calls the validate function
     """
     if request.data:
@@ -41,8 +43,10 @@ def validate():
 
 
 @sigma_bp.route('/translate-all', methods=['POST'])
-def translate_all():
+def translate_all() -> str:
     """
+    :return: str (JSON string)
+
     Calls the validate function
     """
     if request.data:

@@ -69,10 +69,9 @@ def test_translate_all(client, pattern, validated, translations):
         assert 'translations' not in resp_data
     else:
         resp_translations = resp_data['translations']
-        for translation in translations:
-            filtered = list(filter(lambda x: x['tool'] == translation['tool'], resp_translations))
-            assert len(filtered) > 0
-            assert filtered[0]['query'] == translation['query']
+        for i in range(0, len(translations)):
+            assert len(resp_translations[i]) == len(translations[i])
+            assert all(v == resp_translations[i][k] for k,v in translations[i].items())
 
 @pytest.mark.parametrize(u"endpoint", [
     ("validate"),

@@ -8,6 +8,5 @@ before_script:
   - docker build . -t stix-pattern
 
 script:
-  - docker run -it --rm stix-pattern pipenv run test
   - docker run -it --rm stix-pattern pipenv run coverage
   - docker run -it --rm stix-pattern pipenv run codestyle

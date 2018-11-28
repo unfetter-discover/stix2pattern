@@ -129,7 +129,7 @@ level: medium""",
                 'query': '(action="denied") | stats count(dst_port) as val by src_ip | search val > 10'
             },
             {
-                'tool': 'qradar',
+                'tool': 'splunk',
                 'query': '(action="denied") | stats count(dst_ip) as val by src_ip | search val > 10'
             }
         ]

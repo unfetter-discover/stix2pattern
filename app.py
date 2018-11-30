@@ -23,7 +23,7 @@ def build_translation(request_translation, request_data):
     Function that will convert the REST input and call the appriate translation
     """
     if request_data:
-        pattern = request_data.decode("utf-8")  # decode the input string
+        pattern = request_data.decode('utf-8')  # decode the input string
         pattern_object = json.loads(pattern)
         return_object = {
             'pattern': pattern_object['pattern']
@@ -35,13 +35,13 @@ def build_translation(request_translation, request_data):
             return_object['validated'] = False
             return json.dumps(return_object)
         for translation in request_translation:
-            if translation == "car-elastic":
+            if translation == 'car-elastic':
                 output_language = SearchPlatforms.ELASTIC
                 output_data_model = DataModels.CAR
-            elif translation == "car-splunk":
+            elif translation == 'car-splunk':
                 output_language = SearchPlatforms.SPLUNK
                 output_data_model = DataModels.CAR
-            elif translation == "cim-splunk":
+            elif translation == 'cim-splunk':
                 output_language = SearchPlatforms.SPLUNK
                 output_data_model = DataModels.CIM
             else:
@@ -71,22 +71,22 @@ def handle_invalid_usage(error):
 
 @app.route('/car-elastic', methods=['POST'])
 def car_elastic():
-    return build_translation(["car-elastic"], request.data)
+    return build_translation(['car-elastic'], request.data)
 
 
 @app.route('/car-splunk', methods=['POST'])
 def car_splunk():
-    return build_translation(["car-splunk"], request.data)
+    return build_translation(['car-splunk'], request.data)
 
 
 @app.route('/cim-splunk', methods=['POST'])
 def cim_splunk():
-    return build_translation(["cim-splunk"], request.data)
+    return build_translation(['cim-splunk'], request.data)
 
 
 @app.route('/translate-all', methods=['POST'])
 def translate_all():
-    return build_translation(["car-elastic", "car-splunk", "cim-splunk"], request.data)
+    return build_translation(['car-elastic', 'car-splunk', 'cim-splunk'], request.data)
 
 
 @app.route('/get-objects', methods=['POST'])
@@ -95,10 +95,11 @@ def get_objects():
     Returns just the objects that are part of the STIX object
     """
     if request.data:
-        pattern = request.data.decode("utf-8")  # decode the input string
+        pattern = request.data.decode('utf-8')  # decode the input string
         pattern_object = json.loads(pattern)
-        return_object = {}
-        return_object['pattern'] = pattern_object['pattern']
+        return_object = {
+            'pattern': pattern_object['pattern']
+        }
         try:
             return_object['validated'] = validate(
                 pattern_object['pattern'], ret_errs=False, print_errs=True)
@@ -106,15 +107,15 @@ def get_objects():
 
             theinspector = inspector.InspectionListener()
             compiled_pattern.walk(theinspector)
-            res = {}
             res_array = []
             for i in list(theinspector.pattern_data().comparisons.items()):
                 name = i[0]
                 for j in i[1]:
-                    object = {}
-                    object["name"] = name
-                    object["property"] = j[0][0]
-                    res_array.append(object)
+                    obj = {
+                        'name': name,
+                        'property': j[0][0]
+                    }
+                    res_array.append(obj)
                 return_object['object'] = res_array
             return json.dumps(return_object)
 
@@ -132,7 +133,7 @@ def call_validate():
     """
     if request.data:
 
-        pattern = request.data.decode("utf-8")  # decode the input string
+        pattern = request.data.decode('utf-8')  # decode the input string
         pattern_object = json.loads(pattern)
         return_object = {}
         return_object['pattern'] = pattern_object['pattern']
@@ -153,7 +154,7 @@ def heartbeat():
     return json.dumps({'success': True, 'service': 'unfetter-pattern-handler', 'status': 'RUNNING'})
 
 
-app.register_blueprint(sigma_bp, url_prefix="/sigma")
+app.register_blueprint(sigma_bp, url_prefix='/sigma')
 
 
 def main():

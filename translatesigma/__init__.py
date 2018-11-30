@@ -23,7 +23,7 @@ def process_sigma(pattern: str, translate=False) -> Dict[str, Any]:
 
     try:
         parsed = parser.SigmaCollectionParser(pattern, sigma_config)
-    except (yaml.YAMLError) as e:
+    except yaml.YAMLError as e:
         ret_val['message'] = 'Not valid YAML'
         ret_val['validated'] = False
         return ret_val

@@ -9,7 +9,6 @@ flask = "*"
 stix-pattern-translator = "*"
 gunicorn = "*"
 sigmatools = "*"
-mypy = "*"
 
 [dev-packages]
 pytest = "*"

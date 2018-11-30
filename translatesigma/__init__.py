@@ -1,5 +1,5 @@
 from sigma import parser, config, backends
-from typing import Dict
+from typing import Dict, Any
 import yaml
 
 backend_names = ['splunk', 'qradar', 'es-qs']
@@ -7,7 +7,7 @@ backend_names = ['splunk', 'qradar', 'es-qs']
 sigma_config = config.SigmaConfiguration()
 
 
-def process_sigma(pattern: str, translate=False) -> Dict[str, any]:
+def process_sigma(pattern: str, translate=False) -> Dict[str, Any]:
     """
     :param pattern: str (stringified SIGMA)
     :param translate: boolean (default False)
@@ -17,13 +17,13 @@ def process_sigma(pattern: str, translate=False) -> Dict[str, any]:
     If it is valid SIGMA and translate is set to True,
     it will translate it to various backends' syntax
     """
-    ret_val = {
+    ret_val: Dict[str, Any] = {
         'pattern': pattern
     }
 
     try:
         parsed = parser.SigmaCollectionParser(pattern, sigma_config)
-    except (yaml.parser.ParserError, yaml.scanner.ScannerError, yaml.YAMLError) as e:
+    except (yaml.YAMLError) as e:
         ret_val['message'] = 'Not valid YAML'
         ret_val['validated'] = False
         return ret_val

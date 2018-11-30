@@ -18,47 +18,43 @@ from shared.errors import InvalidUsage
 app: Flask = Flask(__name__.split('.')[0])
 
 
-def buildTranslation(requestTranslation, requestData):
+def build_translation(request_translation, request_data):
     """
     Function that will convert the REST input and call the appriate translation
     """
-    if requestData:
-        pattern = requestData.decode("utf-8")  # decode the input string
-        patternObject = json.loads(pattern)
-        returnObject = {}
-        returnObject['pattern'] = patternObject['pattern']
+    if request_data:
+        pattern = request_data.decode("utf-8")  # decode the input string
+        pattern_object = json.loads(pattern)
+        return_object = {
+            'pattern': pattern_object['pattern']
+        }
         try:
-            returnObject['validated'] = pass_test = validate(
-                patternObject['pattern'], ret_errs=False, print_errs=True)
+            return_object['validated'] = pass_test = validate(
+                pattern_object['pattern'], ret_errs=False, print_errs=True)
         except Exception as e:
-            returnObject['validated'] = False
-            return json.dumps(returnObject)
-# Removing bare exception because I should not get any other error,
-# but need more failure testing
-#        except:
-#            returnObject['validated'] = False
-#            return json.dumps(returnObject)
-        for translation in requestTranslation:
+            return_object['validated'] = False
+            return json.dumps(return_object)
+        for translation in request_translation:
             if translation == "car-elastic":
-                outputLanguage = SearchPlatforms.ELASTIC
-                outputDataModel = DataModels.CAR
+                output_language = SearchPlatforms.ELASTIC
+                output_data_model = DataModels.CAR
             elif translation == "car-splunk":
-                outputLanguage = SearchPlatforms.SPLUNK
-                outputDataModel = DataModels.CAR
+                output_language = SearchPlatforms.SPLUNK
+                output_data_model = DataModels.CAR
             elif translation == "cim-splunk":
-                outputLanguage = SearchPlatforms.SPLUNK
-                outputDataModel = DataModels.CIM
+                output_language = SearchPlatforms.SPLUNK
+                output_data_model = DataModels.CIM
             else:
                 raise InvalidUsage('Invalid Request Data', status_code=400)
 
             try:
-                returnObject[translation] = None
-                returnObject[translation] = translate(
-                    patternObject['pattern'], outputLanguage, outputDataModel)
+                return_object[translation] = None
+                return_object[translation] = translate(
+                    pattern_object['pattern'], output_language, output_data_model)
             except Exception as e:
                 pass
 
-        return json.dumps(returnObject)
+        return json.dumps(return_object)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
 
@@ -75,79 +71,79 @@ def handle_invalid_usage(error):
 
 @app.route('/car-elastic', methods=['POST'])
 def car_elastic():
-    return buildTranslation(["car-elastic"], request.data)
+    return build_translation(["car-elastic"], request.data)
 
 
 @app.route('/car-splunk', methods=['POST'])
 def car_splunk():
-    return buildTranslation(["car-splunk"], request.data)
+    return build_translation(["car-splunk"], request.data)
 
 
 @app.route('/cim-splunk', methods=['POST'])
 def cim_splunk():
-    return buildTranslation(["cim-splunk"], request.data)
+    return build_translation(["cim-splunk"], request.data)
 
 
 @app.route('/translate-all', methods=['POST'])
-def translate_ll():
-    return buildTranslation(["car-elastic", "car-splunk", "cim-splunk"], request.data)
+def translate_all():
+    return build_translation(["car-elastic", "car-splunk", "cim-splunk"], request.data)
 
 
 @app.route('/get-objects', methods=['POST'])
-def getObjects():
+def get_objects():
     """
     Returns just the objects that are part of the STIX object
     """
     if request.data:
         pattern = request.data.decode("utf-8")  # decode the input string
-        patternObject = json.loads(pattern)
-        returnObject = {}
-        returnObject['pattern'] = patternObject['pattern']
+        pattern_object = json.loads(pattern)
+        return_object = {}
+        return_object['pattern'] = pattern_object['pattern']
         try:
-            returnObject['validated'] = validate(
-                patternObject['pattern'], ret_errs=False, print_errs=True)
-            compiled_pattern = Pattern(patternObject['pattern'])
+            return_object['validated'] = validate(
+                pattern_object['pattern'], ret_errs=False, print_errs=True)
+            compiled_pattern = Pattern(pattern_object['pattern'])
 
             theinspector = inspector.InspectionListener()
             compiled_pattern.walk(theinspector)
             res = {}
-            resArray = []
+            res_array = []
             for i in list(theinspector.pattern_data().comparisons.items()):
                 name = i[0]
                 for j in i[1]:
                     object = {}
                     object["name"] = name
                     object["property"] = j[0][0]
-                    resArray.append(object)
-                returnObject['object'] = resArray
-            return json.dumps(returnObject)
+                    res_array.append(object)
+                return_object['object'] = res_array
+            return json.dumps(return_object)
 
         except Exception as e:
-            returnObject['validated'] = False
-            return json.dumps(returnObject)
+            return_object['validated'] = False
+            return json.dumps(return_object)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
 
 
 @app.route('/validate', methods=['POST'])
-def callValidate():
+def call_validate():
     """
     Calls the validate function
     """
     if request.data:
 
         pattern = request.data.decode("utf-8")  # decode the input string
-        patternObject = json.loads(pattern)
-        returnObject = {}
-        returnObject['pattern'] = patternObject['pattern']
+        pattern_object = json.loads(pattern)
+        return_object = {}
+        return_object['pattern'] = pattern_object['pattern']
         try:
-            returnObject['validated'] = validate(
-                returnObject['pattern'], ret_errs=False, print_errs=True)
-            return json.dumps(returnObject)
+            return_object['validated'] = validate(
+                return_object['pattern'], ret_errs=False, print_errs=True)
+            return json.dumps(return_object)
 
         except Exception as e:
-            returnObject['validated'] = False
-            return json.dumps(returnObject)
+            return_object['validated'] = False
+            return json.dumps(return_object)
     else:
         raise InvalidUsage('No Request Data', status_code=400)
 
@@ -161,17 +157,16 @@ app.register_blueprint(sigma_bp, url_prefix="/sigma")
 
 
 def main():
-
+    ip = None
     try:
         socket.inet_aton(sys.argv[1])
-        IP = sys.argv[1]
+        ip = sys.argv[1]
     except Exception as e:
-        IP = '127.0.0.1'
+        ip = '127.0.0.1'
     finally:
-        print("IP is " + IP)
-        app.run(port=5000, host=IP)
+        print(f'IP is {ip}')
+        app.run(port=5000, host=ip)
 
 
 if __name__ == '__main__':
-    # DEVELOPMENT Settings, change for production!!!
     main()

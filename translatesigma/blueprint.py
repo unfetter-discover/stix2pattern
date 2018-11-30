@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from typing import Any
 
 from . import process_sigma
 from shared.errors import InvalidUsage
@@ -6,7 +7,7 @@ from shared.errors import InvalidUsage
 sigma_bp = Blueprint('sigma', __name__)
 
 
-def handle_req(req: request, translate: bool) -> any:
+def handle_req(req: request, translate: bool) -> Any:
     """
     Handles common tasks for both validate and translate routes
 
@@ -26,7 +27,7 @@ def handle_req(req: request, translate: bool) -> any:
 
 
 @sigma_bp.route('/validate', methods=['POST'])
-def validate() -> any:
+def validate() -> Any:
     """
     :return: json
 
@@ -36,7 +37,7 @@ def validate() -> any:
 
 
 @sigma_bp.route('/translate-all', methods=['POST'])
-def translate_all() -> any:
+def translate_all() -> Any:
     """
     :return: json
 

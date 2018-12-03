@@ -1,13 +1,11 @@
-import sys
-import socket
 import json
-import pprint
 import pytest
 from app import app
-import os
 
+from tests.helpers import post_json
 
 # The API for stix2pattern is found at https://app.swaggerhub.com/apis/unfetter/stix2pattern/1.0.0
+
 
 @pytest.fixture
 def client(request):
@@ -24,18 +22,6 @@ def client(request):
 
     request.addfinalizer(teardown)
     return test_client
-
-
-def post_json(client, url, json_dict):
-    """Send dictionary json_dict as a json to the specified url """
-    data = {}
-    data['pattern'] = json_dict
-    return client.post(url, data=json.dumps(data), content_type='application/json')
-
-
-def json_of_response(response):
-    """Decode json from response"""
-    return json.loads(response.data.decode('utf8'))
 
 #  I can't get this to run on the command line
 
@@ -119,8 +105,8 @@ TRANSLATE_SUCESS = [
     ("[process:name NOT LIKE '%.exe' AND process:pid >= 4]", True,
      [
          '(data_model.object:process AND data_model.fields.pid:>=4) AND (data_model.object:process AND NOT(data_model.fields.exe:*.exe))',
-         '|where ((match(tag, "dm-process-.*") AND pid >= 4) AND (match(tag, "dm-process-.*") AND NOT (match(exe, "^.*\.exe$"))))',
-         '|where ((tag="process" AND pid >= 4) AND (tag="process" AND NOT (match(process, "^.*\.exe$"))))',
+         '|where ((match(tag, "dm-process-.*") AND pid >= 4) AND (match(tag, "dm-process-.*") AND NOT (match(exe, \"^%\\.exe$\"))))',
+         '|where ((tag="process" AND pid >= 4) AND (tag="process" AND NOT (match(process, \"^%\\.exe$\"))))',
      ])
 ]
 
@@ -132,7 +118,7 @@ def test_every_translate(client, pattern, validated, translatedResults):
     This test makes it easier to document multiple translations for a given pattern
     """
     for i, endpoint in enumerate(["car-elastic", "car-splunk", "cim-splunk"]):
-        response = post_json(client, '/'+endpoint, pattern)
+        response = post_json(client, '/' + endpoint, pattern)
         expectedValue = {}
         expectedValue['pattern'] = pattern
         expectedValue['validated'] = validated

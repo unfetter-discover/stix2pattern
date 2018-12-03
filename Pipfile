@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+"stix2-validator" = "*"
+stix-pattern-translator = "*"
+gunicorn = "*"
+sigmatools = "*"
+
+[dev-packages]
+pytest = "*"
+coverage = "*"
+pycodestyle = "*"
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+test = "pytest"
+start = "python app.py"
+deploy = "gunicorn --config gunicorn_config.py --access-logfile - app:app"
+coverage = "sh -c \"coverage run -m pytest && coverage report\""
+codestyle = "pycodestyle"
+serve_coverage = "sh -c \"coverage run -m pytest && coverage html && pushd htmlcov/ && python3 -m http.server 8765; popd\""
